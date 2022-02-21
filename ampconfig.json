@@ -1,0 +1,19 @@
+{
+  "dataServiceGeneratorVersion": "0.11.2",
+  "appInfo": {
+    "name": "Flipkart",
+    "description": "Nestjs App WIth https://app.amplication.com/ ",
+    "version": "xmv8u876",
+    "id": "ckzwo7r8185465401s63kdj2ox6",
+    "url": "https://app.amplication.com/ckzwo7r8185465401s63kdj2ox6",
+    "settings": {
+      "dbHost": "localhost",
+      "dbName": "",
+      "dbPassword": "admin",
+      "dbPort": 5432,
+      "dbUser": "admin",
+      "appId": "ckzwo7r8185465401s63kdj2ox6",
+      "authProvider": "Jwt"
+    }
+  }
+}
