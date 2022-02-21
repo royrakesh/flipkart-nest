@@ -481,13 +481,6 @@ export class OrderItemControllerBase {
         id: true,
         itemPrice: true,
         name: true,
-
-        orderItem: {
-          select: {
-            id: true,
-          },
-        },
-
         salePrice: true,
         updatedAt: true,
       },

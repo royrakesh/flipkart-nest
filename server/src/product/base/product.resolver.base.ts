@@ -27,6 +27,7 @@ import { ProductFindUniqueArgs } from "./ProductFindUniqueArgs";
 import { Product } from "./Product";
 import { CategoryFindManyArgs } from "../../category/base/CategoryFindManyArgs";
 import { Category } from "../../category/base/Category";
+import { OrderItemFindManyArgs } from "../../orderItem/base/OrderItemFindManyArgs";
 import { OrderItem } from "../../orderItem/base/OrderItem";
 import { ProductService } from "../product.service";
 
@@ -134,15 +135,7 @@ export class ProductResolverBase {
     // @ts-ignore
     return await this.service.create({
       ...args,
-      data: {
-        ...args.data,
-
-        orderItem: args.data.orderItem
-          ? {
-              connect: args.data.orderItem,
-            }
-          : undefined,
-      },
+      data: args.data,
     });
   }
 
@@ -181,15 +174,7 @@ export class ProductResolverBase {
       // @ts-ignore
       return await this.service.update({
         ...args,
-        data: {
-          ...args.data,
-
-          orderItem: args.data.orderItem
-            ? {
-                connect: args.data.orderItem,
-              }
-            : undefined,
-        },
+        data: args.data,
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -249,7 +234,7 @@ export class ProductResolverBase {
     return results.map((result) => permission.filter(result));
   }
 
-  @graphql.ResolveField(() => OrderItem, { nullable: true })
+  @graphql.ResolveField(() => [OrderItem])
   @nestAccessControl.UseRoles({
     resource: "Product",
     action: "read",
@@ -257,19 +242,21 @@ export class ProductResolverBase {
   })
   async orderItem(
     @graphql.Parent() parent: Product,
+    @graphql.Args() args: OrderItemFindManyArgs,
     @gqlUserRoles.UserRoles() userRoles: string[]
-  ): Promise<OrderItem | null> {
+  ): Promise<OrderItem[]> {
     const permission = this.rolesBuilder.permission({
       role: userRoles,
       action: "read",
       possession: "any",
       resource: "OrderItem",
     });
-    const result = await this.service.getOrderItem(parent.id);
+    const results = await this.service.findOrderItem(parent.id, args);
 
-    if (!result) {
-      return null;
+    if (!results) {
+      return [];
     }
-    return permission.filter(result);
+
+    return results.map((result) => permission.filter(result));
   }
 }
