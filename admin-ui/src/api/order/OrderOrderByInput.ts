@@ -5,6 +5,7 @@ export type OrderOrderByInput = {
   customerId?: SortOrder;
   discount?: SortOrder;
   id?: SortOrder;
+  orderitemId?: SortOrder;
   quantity?: SortOrder;
   shippingCost?: SortOrder;
   tax?: SortOrder;

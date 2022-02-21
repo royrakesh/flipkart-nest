@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------
   */
 import { PrismaService } from "nestjs-prisma";
-import { Prisma, Order, OrderItem, Customer } from "@prisma/client";
+import { Prisma, Order, Customer, OrderItem } from "@prisma/client";
 
 export class OrderServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -47,22 +47,19 @@ export class OrderServiceBase {
     return this.prisma.order.delete(args);
   }
 
-  async findOrderItem(
-    parentId: string,
-    args: Prisma.OrderItemFindManyArgs
-  ): Promise<OrderItem[]> {
-    return this.prisma.order
-      .findUnique({
-        where: { id: parentId },
-      })
-      .orderItem(args);
-  }
-
   async getCustomer(parentId: string): Promise<Customer | null> {
     return this.prisma.order
       .findUnique({
         where: { id: parentId },
       })
       .customer();
+  }
+
+  async getOrderitem(parentId: string): Promise<OrderItem | null> {
+    return this.prisma.order
+      .findUnique({
+        where: { id: parentId },
+      })
+      .orderitem();
   }
 }

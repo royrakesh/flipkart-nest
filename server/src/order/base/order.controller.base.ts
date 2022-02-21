@@ -27,8 +27,6 @@ import { OrderWhereUniqueInput } from "./OrderWhereUniqueInput";
 import { OrderFindManyArgs } from "./OrderFindManyArgs";
 import { OrderUpdateInput } from "./OrderUpdateInput";
 import { Order } from "./Order";
-import { OrderItemFindManyArgs } from "../../orderItem/base/OrderItemFindManyArgs";
-import { OrderItem } from "../../orderItem/base/OrderItem";
 @swagger.ApiBearerAuth()
 export class OrderControllerBase {
   constructor(
@@ -80,6 +78,12 @@ export class OrderControllerBase {
               connect: data.customer,
             }
           : undefined,
+
+        orderitem: data.orderitem
+          ? {
+              connect: data.orderitem,
+            }
+          : undefined,
       },
       select: {
         createdAt: true,
@@ -92,6 +96,13 @@ export class OrderControllerBase {
 
         discount: true,
         id: true,
+
+        orderitem: {
+          select: {
+            id: true,
+          },
+        },
+
         quantity: true,
         shippingCost: true,
         tax: true,
@@ -140,6 +151,13 @@ export class OrderControllerBase {
 
         discount: true,
         id: true,
+
+        orderitem: {
+          select: {
+            id: true,
+          },
+        },
+
         quantity: true,
         shippingCost: true,
         tax: true,
@@ -187,6 +205,13 @@ export class OrderControllerBase {
 
         discount: true,
         id: true,
+
+        orderitem: {
+          select: {
+            id: true,
+          },
+        },
+
         quantity: true,
         shippingCost: true,
         tax: true,
@@ -251,6 +276,12 @@ export class OrderControllerBase {
                 connect: data.customer,
               }
             : undefined,
+
+          orderitem: data.orderitem
+            ? {
+                connect: data.orderitem,
+              }
+            : undefined,
         },
         select: {
           createdAt: true,
@@ -263,6 +294,13 @@ export class OrderControllerBase {
 
           discount: true,
           id: true,
+
+          orderitem: {
+            select: {
+              id: true,
+            },
+          },
+
           quantity: true,
           shippingCost: true,
           tax: true,
@@ -311,6 +349,13 @@ export class OrderControllerBase {
 
           discount: true,
           id: true,
+
+          orderitem: {
+            select: {
+              id: true,
+            },
+          },
+
           quantity: true,
           shippingCost: true,
           tax: true,
@@ -326,180 +371,5 @@ export class OrderControllerBase {
       }
       throw error;
     }
-  }
-
-  @common.UseInterceptors(nestMorgan.MorganInterceptor("combined"))
-  @common.UseGuards(
-    defaultAuthGuard.DefaultAuthGuard,
-    nestAccessControl.ACGuard
-  )
-  @common.Get("/:id/orderItem")
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "read",
-    possession: "any",
-  })
-  @ApiNestedQuery(OrderItemFindManyArgs)
-  async findManyOrderItem(
-    @common.Req() request: Request,
-    @common.Param() params: OrderWhereUniqueInput,
-    @nestAccessControl.UserRoles() userRoles: string[]
-  ): Promise<OrderItem[]> {
-    const query = plainToClass(OrderItemFindManyArgs, request.query);
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "read",
-      possession: "any",
-      resource: "OrderItem",
-    });
-    const results = await this.service.findOrderItem(params.id, {
-      ...query,
-      select: {
-        createdAt: true,
-        id: true,
-        updatedAt: true,
-      },
-    });
-    if (results === null) {
-      throw new errors.NotFoundException(
-        `No resource was found for ${JSON.stringify(params)}`
-      );
-    }
-    return results.map((result) => permission.filter(result));
-  }
-
-  @common.UseInterceptors(nestMorgan.MorganInterceptor("combined"))
-  @common.UseGuards(
-    defaultAuthGuard.DefaultAuthGuard,
-    nestAccessControl.ACGuard
-  )
-  @common.Post("/:id/orderItem")
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "update",
-    possession: "any",
-  })
-  async createOrderItem(
-    @common.Param() params: OrderWhereUniqueInput,
-    @common.Body() body: OrderWhereUniqueInput[],
-    @nestAccessControl.UserRoles() userRoles: string[]
-  ): Promise<void> {
-    const data = {
-      orderItem: {
-        connect: body,
-      },
-    };
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "update",
-      possession: "any",
-      resource: "Order",
-    });
-    const invalidAttributes = abacUtil.getInvalidAttributes(permission, data);
-    if (invalidAttributes.length) {
-      const roles = userRoles
-        .map((role: string) => JSON.stringify(role))
-        .join(",");
-      throw new common.ForbiddenException(
-        `Updating the relationship: ${
-          invalidAttributes[0]
-        } of ${"Order"} is forbidden for roles: ${roles}`
-      );
-    }
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.UseInterceptors(nestMorgan.MorganInterceptor("combined"))
-  @common.UseGuards(
-    defaultAuthGuard.DefaultAuthGuard,
-    nestAccessControl.ACGuard
-  )
-  @common.Patch("/:id/orderItem")
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "update",
-    possession: "any",
-  })
-  async updateOrderItem(
-    @common.Param() params: OrderWhereUniqueInput,
-    @common.Body() body: OrderWhereUniqueInput[],
-    @nestAccessControl.UserRoles() userRoles: string[]
-  ): Promise<void> {
-    const data = {
-      orderItem: {
-        set: body,
-      },
-    };
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "update",
-      possession: "any",
-      resource: "Order",
-    });
-    const invalidAttributes = abacUtil.getInvalidAttributes(permission, data);
-    if (invalidAttributes.length) {
-      const roles = userRoles
-        .map((role: string) => JSON.stringify(role))
-        .join(",");
-      throw new common.ForbiddenException(
-        `Updating the relationship: ${
-          invalidAttributes[0]
-        } of ${"Order"} is forbidden for roles: ${roles}`
-      );
-    }
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
-  }
-
-  @common.UseInterceptors(nestMorgan.MorganInterceptor("combined"))
-  @common.UseGuards(
-    defaultAuthGuard.DefaultAuthGuard,
-    nestAccessControl.ACGuard
-  )
-  @common.Delete("/:id/orderItem")
-  @nestAccessControl.UseRoles({
-    resource: "Order",
-    action: "update",
-    possession: "any",
-  })
-  async deleteOrderItem(
-    @common.Param() params: OrderWhereUniqueInput,
-    @common.Body() body: OrderWhereUniqueInput[],
-    @nestAccessControl.UserRoles() userRoles: string[]
-  ): Promise<void> {
-    const data = {
-      orderItem: {
-        disconnect: body,
-      },
-    };
-    const permission = this.rolesBuilder.permission({
-      role: userRoles,
-      action: "update",
-      possession: "any",
-      resource: "Order",
-    });
-    const invalidAttributes = abacUtil.getInvalidAttributes(permission, data);
-    if (invalidAttributes.length) {
-      const roles = userRoles
-        .map((role: string) => JSON.stringify(role))
-        .join(",");
-      throw new common.ForbiddenException(
-        `Updating the relationship: ${
-          invalidAttributes[0]
-        } of ${"Order"} is forbidden for roles: ${roles}`
-      );
-    }
-    await this.service.update({
-      where: params,
-      data,
-      select: { id: true },
-    });
   }
 }
