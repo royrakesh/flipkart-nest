@@ -9,6 +9,7 @@ import {
 } from "react-admin";
 import Pagination from "../Components/Pagination";
 import { CUSTOMER_TITLE_FIELD } from "../customer/CustomerTitle";
+import { ORDERITEM_TITLE_FIELD } from "../orderItem/OrderItemTitle";
 
 export const OrderList = (props: ListProps): React.ReactElement => {
   return (
@@ -30,6 +31,13 @@ export const OrderList = (props: ListProps): React.ReactElement => {
         </ReferenceField>
         <TextField label="Discount" source="discount" />
         <TextField label="ID" source="id" />
+        <ReferenceField
+          label="Orderitem"
+          source="orderitem.id"
+          reference="OrderItem"
+        >
+          <TextField source={ORDERITEM_TITLE_FIELD} />
+        </ReferenceField>
         <TextField label="Quantity" source="quantity" />
         <TextField label="Shipping Cost" source="shippingCost" />
         <TextField label="Tax" source="tax" />
