@@ -1,0 +1,89 @@
+datasource postgres {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  createdAt DateTime @default(now())
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     String[]
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Order {
+  createdAt    DateTime    @default(now())
+  customer     Customer?   @relation(fields: [customerId], references: [id])
+  customerId   String?
+  discount     Float?
+  id           String      @id @default(cuid())
+  orderItem    OrderItem[]
+  quantity     Int?
+  shippingCost Float?
+  tax          Float?
+  totalPrice   Int?
+  updatedAt    DateTime    @updatedAt
+}
+
+model Customer {
+  address   Address? @relation(fields: [addressId], references: [id])
+  addressId String?
+  createdAt DateTime @default(now())
+  email     String?
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  orders    Order[]
+  phone     String?
+  updatedAt DateTime @updatedAt
+}
+
+model Address {
+  address_1 String?
+  address_2 String?
+  city      String?
+  createdAt DateTime   @default(now())
+  customers Customer[]
+  id        String     @id @default(cuid())
+  state     String?
+  updatedAt DateTime   @updatedAt
+  zip       Int?
+}
+
+model Product {
+  categories    Category[]
+  createdAt     DateTime   @default(now())
+  description   String?
+  featuredImage String?
+  id            String     @id @default(cuid())
+  itemPrice     Float?
+  name          String?
+  orderItem     OrderItem? @relation(fields: [orderItemId], references: [id])
+  orderItemId   String?
+  salePrice     Float?
+  updatedAt     DateTime   @updatedAt
+}
+
+model OrderItem {
+  createdAt DateTime  @default(now())
+  id        String    @id @default(cuid())
+  orders    Order[]
+  products  Product[]
+  updatedAt DateTime  @updatedAt
+}
+
+model Category {
+  createdAt   DateTime  @default(now())
+  description String?
+  id          String    @id @default(cuid())
+  name        String    @unique
+  product     Product[]
+  updatedAt   DateTime  @updatedAt
+}
