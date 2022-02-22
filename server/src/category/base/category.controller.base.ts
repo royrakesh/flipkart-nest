@@ -295,13 +295,6 @@ export class CategoryControllerBase {
         id: true,
         itemPrice: true,
         name: true,
-
-        orderItem: {
-          select: {
-            id: true,
-          },
-        },
-
         salePrice: true,
         updatedAt: true,
       },

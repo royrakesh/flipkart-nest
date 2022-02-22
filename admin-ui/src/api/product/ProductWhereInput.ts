@@ -1,7 +1,6 @@
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
 import { FloatNullableFilter } from "../../util/FloatNullableFilter";
-import { OrderItemWhereUniqueInput } from "../orderItem/OrderItemWhereUniqueInput";
 
 export type ProductWhereInput = {
   description?: StringNullableFilter;
@@ -9,6 +8,5 @@ export type ProductWhereInput = {
   id?: StringFilter;
   itemPrice?: FloatNullableFilter;
   name?: StringNullableFilter;
-  orderItem?: OrderItemWhereUniqueInput;
   salePrice?: FloatNullableFilter;
 };
