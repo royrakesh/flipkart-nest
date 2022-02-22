@@ -11,14 +11,7 @@
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsString,
-  IsOptional,
-  IsNumber,
-  ValidateNested,
-} from "class-validator";
-import { OrderItemWhereUniqueInput } from "../../orderItem/base/OrderItemWhereUniqueInput";
-import { Type } from "class-transformer";
+import { IsString, IsOptional, IsNumber } from "class-validator";
 @InputType()
 class ProductUpdateInput {
   @ApiProperty({
@@ -64,18 +57,6 @@ class ProductUpdateInput {
     nullable: true,
   })
   name?: string | null;
-
-  @ApiProperty({
-    required: false,
-    type: () => OrderItemWhereUniqueInput,
-  })
-  @ValidateNested()
-  @Type(() => OrderItemWhereUniqueInput)
-  @IsOptional()
-  @Field(() => OrderItemWhereUniqueInput, {
-    nullable: true,
-  })
-  orderItem?: OrderItemWhereUniqueInput | null;
 
   @ApiProperty({
     required: false,

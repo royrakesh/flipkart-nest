@@ -58,11 +58,14 @@ export class ProductServiceBase {
       .categories(args);
   }
 
-  async getOrderItem(parentId: string): Promise<OrderItem | null> {
+  async findOrderItem(
+    parentId: string,
+    args: Prisma.OrderItemFindManyArgs
+  ): Promise<OrderItem[]> {
     return this.prisma.product
       .findUnique({
         where: { id: parentId },
       })
-      .orderItem();
+      .orderItem(args);
   }
 }

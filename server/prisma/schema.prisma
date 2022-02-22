@@ -60,16 +60,15 @@ model Address {
 
 model Product {
   categories    Category[]
-  createdAt     DateTime   @default(now())
+  createdAt     DateTime    @default(now())
   description   String?
   featuredImage String?
-  id            String     @id @default(cuid())
+  id            String      @id @default(cuid())
   itemPrice     Float?
   name          String?
-  orderItem     OrderItem? @relation(fields: [orderItemId], references: [id])
-  orderItemId   String?
+  orderItem     OrderItem[]
   salePrice     Float?
-  updatedAt     DateTime   @updatedAt
+  updatedAt     DateTime    @updatedAt
 }
 
 model OrderItem {
